@@ -207,7 +207,11 @@ class Com: public Player{
                 std::string act;
                 std::string ansS;
                 std::cout << invite();
-                std::cin >> act >> ansS;
+                std::cin >> act;
+                if (act == "skip"){
+                    return{};
+                }
+                std::cin >> ansS;
 
                 uint32_t pId;
                 try {
@@ -235,10 +239,7 @@ class Com: public Player{
                         std::cout << "Вы уже проверяли этого игрока, его роль " << RoleToStr[playerRole[pId]] << std::endl;
                     }
                     else std::cout << "Игрока с таким id не существует или он мертв\n";
-                }
-                else {
-                    std::cout << "Вы не можете применять действие '" << act <<"'\n";
-                }
+                } else std::cout << "Вы не можете применять действие '" << act <<"'\n";
             }
         };
 
@@ -248,7 +249,7 @@ class Com: public Player{
             }
 
             if(isHuman){
-                std::cout << "Выберите действие ('check'/'kill') и по отношению к кому Вы хотите его применить:\n";
+                std::cout << "Выберите действие ('check'/'kill'/'skip') и по отношению к кому Вы хотите его применить:\n";
                 return readHumanNightAnswer();
             }
 
