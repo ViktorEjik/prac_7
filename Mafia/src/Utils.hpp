@@ -54,7 +54,7 @@ bool manWin(size_t mafiaBand, bool isManLife){
 }
 
 bool mafiaWin(size_t livePls, size_t mafiaBand, bool isManLife){
-    return (mafiaBand > livePls - mafiaBand) || (mafiaBand == livePls && !isManLife);
+    return (mafiaBand > livePls - mafiaBand) || ((mafiaBand == (livePls - mafiaBand)) && !isManLife);
 }
 
 std::pair<uint32_t, uint32_t>
@@ -120,7 +120,7 @@ takeRoles(uint32_t n, uint32_t humanId, Logger& logger ){
             {Role::MAFIA, n/3},
             {Role::DOC, 1},
             {Role::COM, 1},
-            {Role::PEACE, n - n/3 -3}
+            {Role::PEACE, n - n/3 - 3}
     };
     logger.logFinal("Total role count:");
     for(auto[k, e]: roleCount){

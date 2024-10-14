@@ -21,7 +21,6 @@ enum class Role
     COM,
     MAN,
     PEACE
-
 };
 
 static std::map<Role, std::string> RoleToStr = {
@@ -76,6 +75,7 @@ class Player{
                     continue;
                 }
                 if(players->contains(ans)){
+                    std::cout << std::format("\t<{}>: Я предполагаю, что {} мафия\n", id, ans);
                     return ans;
                 } else {
                     std::cout << "Игрока с таким id не существует или он мертв\n";
@@ -97,11 +97,13 @@ class Player{
             }
 
             std::vector<uint32_t> victims;
-            std::transform(players->begin(), players->end(), back_inserter(victims),
-              [](const std::pair<uint32_t, SharedPtr<Player>> &pair) { return pair.first; });
+            std::for_each(players->begin(), players->end(),
+                          [&victims, this](auto& pair) {
+                              if (pair.first != id) { victims.push_back(pair.first); }});
             auto choice = victims | std::ranges::views::filter([&](const auto& obj){return obj != id;});
-            auto victim = select_randomly(choice.begin(), choice.end());
-            return *victim;
+            auto victim = *select_randomly(choice.begin(), choice.end());
+            std::cout << std::format("\t<{}>: Я предполагаю, что {} мафия\n", id, victim);
+            return victim;
         }
 
         virtual std::optional<std::pair<Do, uint32_t>> night(){
@@ -182,7 +184,7 @@ class Com: public Player{
             ):Player(id, players, isHuman){
                 roleView = Role::PEACE;
                 roleReal = Role::COM;
-            };
+            }
 
         uint32_t day() override {
             if( !players->contains(id)){
@@ -197,10 +199,11 @@ class Com: public Player{
             }
 
             if (killTarget != 0 && players->contains(killTarget)){
+                std::cout << std::format("\t<{}>: Я предполагаю, что {} мафия\n", id, killTarget);
                 return killTarget;
             }
             return Player::day();
-        };
+        }
 
         std::optional<std::pair<Do, uint32_t >> readHumanNightAnswer() override{
             while(true){
@@ -241,7 +244,7 @@ class Com: public Player{
                     else std::cout << "Игрока с таким id не существует или он мертв\n";
                 } else std::cout << "Вы не можете применять действие '" << act <<"'\n";
             }
-        };
+        }
 
         std::optional<std::pair<Do, uint32_t>> night() override {
             if( !players->contains(id)){
@@ -310,6 +313,7 @@ class Maf: public Player {
                     continue;
                 }
                 if(players->contains(ans) && std::all_of(mafiasBand->begin(), mafiasBand->end(), [&ans](const auto& a){return a != ans;})){
+                    std::cout << std::format("\t<{}>: Я предполагаю, что {} мафия\n", id, ans);
                     return ans;
                 } else if (players->contains(ans) && std::any_of(mafiasBand->begin(), mafiasBand->end(), [&ans](const auto& a){return a == ans;})){
                     std::cout << "Нельзя убивать товарища по команде\n";
@@ -338,8 +342,9 @@ class Maf: public Player {
                 return std::all_of(mafiasBand->begin(), mafiasBand->end(), [&obj](auto& x){return x != obj;});
             });
 
-            auto victim = select_randomly(choice.begin(), choice.end());
-            return *victim;
+            auto victim = *select_randomly(choice.begin(), choice.end());
+            std::cout << std::format("\t<{}>: Я предполагаю, что {} мафия\n", id, victim);
+            return victim;
         }
 
         static std::pair<Do, uint32_t> night(std::map<uint32_t, uint32_t>& idVote) {
