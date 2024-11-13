@@ -33,3 +33,8 @@
 
 *Mafia/build/*
 .vscode/*
+**/.idea
+**/build
+**/test_cases
+**/test_res
+**/.*

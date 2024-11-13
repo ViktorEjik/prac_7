@@ -4,3 +4,9 @@
 [submodule "Mafia/thirdparty/CLI11"]
 	path = Mafia/thirdparty/CLI11
 	url = https://github.com/CLIUtils/CLI11.git
+[submodule "Annealing-Simulation/thirdparty/json"]
+	path = Annealing-Simulation/thirdparty/json
+	url = https://github.com/nlohmann/json.git
+[submodule "Annealing-Simulation/thirdparty/CLI11"]
+	path = Annealing-Simulation/thirdparty/CLI11
+	url = https://github.com/CLIUtils/CLI11.git
