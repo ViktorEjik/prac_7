@@ -38,3 +38,4 @@
 **/test_cases
 **/test_res
 **/.*
+**/cmake-build-debug
