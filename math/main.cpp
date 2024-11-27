@@ -1,5 +1,5 @@
 #include <iostream>
-#include <MyMath/Fuctory.hpp>
+#include <MyMath/Factory.hpp>
 #include <cmath>
 
 int main(){
@@ -22,6 +22,15 @@ int main(){
 
     auto exp = *F.Create("exp", 1) - *F.Create("const", 2);
     std::cout << exp.ToString() << " root: " << functions::FindRoot(exp, 10000) << std::endl;
+
+    auto func = *F.Create("polynomial", {5, 1}) * *F.Create("polynomial", {-2, 1});
+    std::cout << func.ToString() << '\n';
+    std::cout << func(3) << '\n';
+    std::cout << func.Derive(5) << '\n';
+    std::cout << F.Create("polynomial", {-10, 3, 1})->ToString() << '\n';
+
+    std::cout << "root1: " << functions::FindRoot(func, 100, 4) << '\n'
+              << "root2: " << functions::FindRoot(func, 100, -8) << '\n';
 
     return 0;
 }

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <MyMath/Fuctory.hpp>
+#include <MyMath/Factory.hpp>
 #include <MyMath/Functions.hpp>
 #include <iostream>
 #include <cmath>
@@ -70,6 +70,12 @@ TEST(Function_test, Arithmetic) {
     auto A5 = A3 / *A4;
     auto A6 = F.Create("const", 18);
     ASSERT_EQ((A5 / *A6)(2), 1);
+
+    auto A7 = F.Create("power", 2);
+    ASSERT_EQ((*A7 + *A6)(2), 22);
+    ASSERT_EQ((*A7 - *A6)(2), -14);
+    ASSERT_EQ((*A7 * *A6)(2), 4 * 18);
+    ASSERT_EQ((*A7 / *A6)(2), 4.0 / 18.0);
 }
 
 TEST(Function_test, Derive) {
@@ -86,9 +92,13 @@ TEST(Function_test, Derive) {
 
     /* Other */
 
-    auto k = F.Create("exp", 2);
-    ASSERT_EQ((*k).Derive(2), ((*k) + (*k))(2));
-    ASSERT_EQ((*k).Derive(20), ((*k) + (*k))(20));
+    auto k = F.Create("exp", 1);
+    ASSERT_EQ((*k).Derive(2), ((*k))(2));
+    ASSERT_EQ((*k).Derive(20), ((*k))(20));
+
+    auto power = F.Create("power", 2);
+    ASSERT_EQ((*k * *power).Derive(1), 8.1548454853771357);
+    ASSERT_EQ((*k / *power).Derive(1), -2.7182818284590451);
 }
 
 TEST(Function_test, RootSearch) {
@@ -102,7 +112,7 @@ TEST(Function_test, RootSearch) {
     ASSERT_EQ(std::round(FindRoot((*p), 20, -2)), -1);
     ASSERT_EQ(std::round(FindRoot((*p), 20, 2)), 1);
     auto h = F.Create("polynomial", {8, 0, 0, -1});
-    ASSERT_EQ(std::round(FindRoot((*h), 1000, 2)), 2);
+    ASSERT_EQ(std::round(FindRoot((*h), 20, 2)), 2);
 
 }
 
